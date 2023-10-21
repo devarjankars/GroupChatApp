@@ -11,6 +11,7 @@ const controller=require('../Contollers/userControllers');
 router.get('/',controller.getSignUp)
 router.post('/signUp',controller.postNewUserData)
 router.get('/login',controller.getLogin)
+router.post('/user/login',controller.LoginData);
 
 
 
