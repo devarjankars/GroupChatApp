@@ -15,9 +15,12 @@ const sequelize= require('./utils/database');
 
 //routes import
 const userRoutes= require('./routes/userRoute');
+const homeRoutes=require('./routes/homeRoute');
+
 
 //rotes redirection
 app.use('/',userRoutes);
+app.use('/home',homeRoutes);
 
 //db assoction
 
@@ -25,7 +28,7 @@ app.use('/',userRoutes);
 //db initalization
 
 sequelize
-  .sync({ force: true })
+  .sync({force:true})
   .then((result) => {
     app.listen(process.env.PORT || 3000);
   })

@@ -1,17 +1,24 @@
 
-const s_btn=document.getElementById('sbt-login');
+const s_btn=document.getElementById('Sbt-Login');
 
-const logEmail=document.getElementById('log-email').value;
-const logPwd=document.getElementById('log-pwd').value;
+
+   
 let postLogin = async ()=>{
     try{
         //http://localhost:4000/user/login
-       let  logObj={
-        logEmail:logEmail,
-        logPwd:logPwd
-       }
-        let res=axios.post(`http://localhost:3000/user/login`,{logObj});
-        alert(res.msg);
+        const logEmail=document.getElementById('log-email').value;
+        const logPwd=document.getElementById('log-pwd').value;
+        let  logObj={
+            logEmail:logEmail,
+            logpwd:logPwd
+           }
+       console.log(logPwd,logEmail,logObj)
+        let res= await axios.post(`http://localhost:3000/user/login`,{logObj});
+        console.log(res);
+        localStorage.setItem("token",res.data.token)
+        alert(res.data.msg);
+        
+             window.location.href="/home"
 
         
 
