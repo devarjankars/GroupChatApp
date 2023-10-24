@@ -18,12 +18,13 @@ let postLogin = async ()=>{
         localStorage.setItem("token",res.data.token)
         alert(res.data.msg);
         
-             window.location.href="/home"
+           window.  location.href="/home"
 
         
 
     }   
     catch(err){
+        alert(err.response.data.msg)
         console.log(err);
     }
 }

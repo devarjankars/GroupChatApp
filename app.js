@@ -12,6 +12,8 @@ app.use(bodyParser.json());
 
 //db import
 const sequelize= require('./utils/database');
+const User= require('./Models/user');
+const Chat = require('./Models/chat')
 
 //routes import
 const userRoutes= require('./routes/userRoute');
@@ -23,12 +25,13 @@ app.use('/',userRoutes);
 app.use('/home',homeRoutes);
 
 //db assoction
-
+User.hasMany(Chat);
+Chat.belongsTo(User)
 
 //db initalization
 
 sequelize
-  .sync({force:true})
+  .sync()
   .then((result) => {
     app.listen(process.env.PORT || 3000);
   })

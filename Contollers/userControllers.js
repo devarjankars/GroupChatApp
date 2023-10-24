@@ -5,28 +5,30 @@ const bcrypt=require('bcrypt')
 const jwt= require ('jsonwebtoken');
 
 function getJwtToken( id , mail){
-    return jwt.sign({ userId: id, email: email }, process.env.TOKEN);
+    return jwt.sign({ userId: id, email: mail }, process.env.TOKEN);
 
 }
 
 
 exports.postNewUserData= async(req, res, next)=>{
     try{
+       // console.log(req.body);
         const dataObj={
             name: req.body.name,
-            email: req.body.Email,
+            email: req.body.email,
             number: req.body.number,
             password: req.body.password,
         }
+        //console.log(dataObj);
         let user= await User.findOne({where:{email:req.body.email}})
         if(user){
             res.status(409).json({msg:"Your email already present Please login"})
         }
         else{
-            bcrypt.hash(req.body.password, 10,async (err ,hash)=>{
+            bcrypt.hash(req.body.password, 10, async (err ,hash)=>{
                 await User.create({
                     name: req.body.name,
-            email: req.body.Email,
+            email: req.body.email,
             number: req.body.number,
             password: hash,
                 });
@@ -66,7 +68,7 @@ try{
     let user= await User.findAll({where:{email:email}})
     console.log(user[0]);
     if(user[0]){
-       bcrypt.compare(password,user[0],(err,result)=>{
+       bcrypt.compare(password, user[0].password,(err,result)=>{
         if(err){
             return res.
             status(500).
