@@ -16,8 +16,8 @@ let postChat=async()=>{
     catch(err){
         console.log(err);
     }
-
 }
+
 
 
 
@@ -45,12 +45,16 @@ let homepageLoad =async()=>{
     }
 
 }
+let reloadHomePage=async(req,res,next)=>{
+    location.reload();
+}
 
 
 
 document.addEventListener('DOMContentLoaded', homepageLoad)
 
 chatBtn.addEventListener('click',postChat)
+setInterval(reloadHomePage,10000)
 // let getMsg= async()=>{
 //     try{
 
