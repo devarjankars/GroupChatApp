@@ -6,7 +6,7 @@ const authy= require('../middleware/authy')
 
 router.get('/',controller.getHomePage)
 
-router.get('/getMsg/:param',controller.getMsg);
+//router.get('/getMsg/:param',controller.getMsg);
 router.post('/sendMsg',authy,controller.sentMsg);
 
 module.exports=router;

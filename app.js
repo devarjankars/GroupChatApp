@@ -5,7 +5,12 @@ const bodyParser= require('body-parser')
 
 const app=express()
 
-
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
