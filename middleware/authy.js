@@ -3,7 +3,7 @@ const User=require('../Models/user');
 
 const authenticate= async( req,res,next)=>{
     try{
-     
+          console.log(req.body)
          const token=req.header("Authorization");
          //console.log(token);
          const user=jwt.verify(token, process.env.TOKEN);

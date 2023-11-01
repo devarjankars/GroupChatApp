@@ -1,39 +1,44 @@
-const sequelize=require('../utils/database');
-const AWS = require('aws-sdk')
+const AWS= require('aws-sdk');
 
 
 
-function  uploadToS3(data, filename){
- const BUCKET_NAME='expense.tracker.project';
- const IAM_USER_KEY=`${process.env.IAM_USER_KEY}`;
- const IAM_USER_SECRET=`${process.env.IAM_USER_SECRET}`;
 
 
-let s3bucket= new  AWS.S3({
-    accessKeyId:IAM_USER_KEY,
-    secretAccessKey:IAM_USER_SECRET,
-    Bucket:BUCKET_NAME
-})
+exports.addfileToGroup = async (req, res) => {
+  try {
+    console.log(req.body.formData.file);
+      //const currentDateTime = req.body.currentDateTime;
+      const filename = req.body.filename;
+      console.log("object=>" + filename);
+      // const memberId = parseInt(req.body.memberId);
+      const senderId = req.user.id;
+      console.log(senderId);
+      console.log(req.body.group)
 
+      const file = req.file;
+      const s3 = new AWS.S3({
+          accessKeyId: process.env.IAM_USER_KEY,
+          secretAccessKey: process.env.IAM_USER_SECRET
+      });
+      const params = {
+          Bucket: 'group.chat.app',
+          Key: filename,
+          Body: file.buffer,
+          ACL: 'public-read',
+      };
+      // console.log(filename);
+      const s3Res = await s3.upload(params).promise();
 
-  let params={
-     Bucket:BUCKET_NAME,
-     Key:filename,
-     Body:data,
-     ALC:'public-read'
+      // await ChatGroupFileModal.create({
+      //     id: getRandomInt(100000, 999999),
+      //     senderId: senderId,
+      //     fileName: filename,
+      //     date: currentDateTime,
+      //     fileUrl: s3Response.Location,
+      //     GroupNameDatumId: memberId
+      // })
+      return res.status(201).json({ fileUrl: s3Res.Location });
+  } catch (error) {
+      console.log(error)
   }
-  return new Promise((Resolv, Reject)=>{
-    s3bucket.upload(params,(err, s3res)=>{
-        if(err){
-            console.log(err);
-            Reject(err)
-        }
-        else{
-            //console.log(s3res);
-        }  Resolv(s3res.Location);
-      })
-  })
-  
-
-
 }

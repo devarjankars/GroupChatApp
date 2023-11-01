@@ -1,8 +1,11 @@
+
 const messageTextArea = document.getElementById("messageTextArea");
 const messageSendBtn = document.getElementById("messageSendBtn");
 const chatBoxBody = document.getElementById("chatBoxBody");
 const uiGroup = document.getElementById("groups");
 const groupNameHeading = document.getElementById("groupNameHeading");
+const inputFile= document.getElementById('input-Files');
+const Uploadtos3=document.getElementById('Uploadtos3')
 const socket = io("http://localhost:5000");
 socket.on("data", (data) => {
   console.log(data);
@@ -28,6 +31,7 @@ async function activeGroup(e) {
   groupNameHeading.appendChild(span);
   getMessages();
 }
+
 
 async function messageSend() {
   try {
@@ -143,6 +147,47 @@ async function getMessages() {
   });
 }
 
+
+let UploadFiles= async(e)=>{
+  try{
+    e.preventDefault();
+    
+    const ifile=document.getElementById('input-Files').files[0];
+      const filename= ifile.name;
+      console.log(ifile,filename)
+    
+    if (chatBoxBody.querySelector(".groupMembersDiv")) {
+      const members = chatBoxBody.querySelectorAll(".groupMembersDiv");
+      members.forEach((member) => {
+        member.remove();
+      });
+    }
+    
+    const token = localStorage.getItem("token");
+    const groupName = localStorage.getItem("groupName");
+    if (!groupName || groupName == "") {
+      return alert("Select group to send the message");
+    }
+    
+    const formData= new FormData();
+    formData.append("file",ifile);
+    formData.append("filename", filename)
+    formData.append("group",groupName);
+    console.log(formData);
+    //console.log(formData);
+    const result= await axios.post(`http://localhost:3000/aws/upload`,{
+       body: formData
+    },
+    { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': token},
+      
+    });
+  console.log(result.data)
+  //getMessages();
+  }
+  catch(err){
+    console.log(err);
+  }
+}
 // async function getMessages() {
 //   try {
 //     const groupName = localStorage.getItem("groupName");
@@ -237,6 +282,7 @@ async function getMessages() {
 // }
 
 messageSendBtn.addEventListener("click", messageSend);
+Uploadtos3.addEventListener('click', UploadFiles)
 // document.addEventListener("DOMContentLoaded", getMessagesFromLocalStorage);
 uiGroup.addEventListener("click", activeGroup);
 document.addEventListener("DOMContentLoaded", () => {

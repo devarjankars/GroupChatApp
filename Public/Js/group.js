@@ -5,6 +5,7 @@ const deleteFromGroupBtn = document.getElementById("deleteFromGroup");
 const logoutBtn = document.getElementById("logout");
 const groups = document.getElementById("groups");
 
+
 async function createGroup() {
   try {
     const groupName = prompt("Group Name");

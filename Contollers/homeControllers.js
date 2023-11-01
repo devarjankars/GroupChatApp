@@ -39,13 +39,13 @@ const io = require("socket.io")(5000, {
 io.on("connection", (socket) => {
   socket.on("getMessages", async (groupName) => {
     try {
-      console.log("message getting", groupName);
+      //onsole.log("message getting", groupName);
       const group = await Group.findOne({ where: { name: groupName } });
       console.log(group.dataValues.id);
       const messages = await Chat.findAll({
         where: { groupId: group.dataValues.id },
       });
-      console.log(messages);
+      //console.log(messages);
       io.emit("messages", messages);
     } catch (error) {
       console.log(error);
@@ -80,3 +80,15 @@ exports.getHomePage= async(req,res,next)=>{
     }
 
 }
+exports.getAwsHome= async(req,res,next)=>{
+  try{
+
+      res.status(200).sendFile(path.join(__dirname, "../", "public", "views", "upload.html"))
+
+  }
+  catch(err){
+      console.log(err);
+  }
+
+}
+

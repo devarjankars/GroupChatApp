@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express=require('express');
-const bodyParser= require('body-parser')
+
+
 
 
 const app=express()
+const bodyParser= require('body-parser')
+
 
 const cors = require("cors");
 app.use(
@@ -15,6 +18,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
 //db import
 const Group= require('./Models/group');
 const groupRouter= require('./routes/gruopRoute');
@@ -23,6 +27,7 @@ const User= require('./Models/user');
 const Chat = require('./Models/chat')
 
 //routes import
+const awsRoute= require('./routes/awsRoute');
 const userRoutes= require('./routes/userRoute');
 const homeRoutes=require('./routes/homeRoute');
 const UserGroup = require('./Models/userGroup');
@@ -30,8 +35,10 @@ const UserGroup = require('./Models/userGroup');
 
 //rotes redirection
 app.use('/',userRoutes);
+app.use('/aws',awsRoute);
 app.use('/home',homeRoutes);
-app.use("/group", groupRouter);
+app.use('/group', groupRouter);
+
 
 //db assoction
 User.hasMany(Chat,{ onDelete: "CASCADE", hooks: true });
@@ -48,11 +55,14 @@ UserGroup.belongsTo(Group);
 Group.hasMany(UserGroup)
 
 //db initalization
+const job = require("./Job/corn");
+job.start();
 
 sequelize
   .sync(
 //{ force:true}
   )
+  
   .then((result) => {
     app.listen(process.env.PORT || 3000);
   })
